@@ -1,5 +1,4 @@
 ipkcpc
-ipkcpc.o
 server
-server.o
+*.o
 .vscode
