@@ -76,9 +76,9 @@ void TcpServer::await_response() {
     if (str.compare("HELLO") == 0) {
         cout << str << endl;
     } else if (str.compare("BYE") == 0) {
+        cout << str << endl;
         if (this->_end) {
             // we ended this connection, this is a confirmation
-            cout << str << endl;
             end();
         } else {
             // we received from server BYE first
