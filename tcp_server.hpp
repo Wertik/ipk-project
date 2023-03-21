@@ -5,6 +5,7 @@
 class TcpServer : public Server {
    private:
     int _socketfd;
+    bool _end = false;
 
    public:
     void begin(string host, int port);

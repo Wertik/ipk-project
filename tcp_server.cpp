@@ -45,6 +45,10 @@ void TcpServer::begin(string host, int port) {
 }
 
 void TcpServer::send_payload(string payload) {
+    if (payload.compare("BYE") == 0) {
+        this->_end = true;
+    }
+
     ssize_t sent = send(_socketfd, payload.c_str(), payload.length() + 1, 0);
 
     if (sent < 0) {
@@ -72,7 +76,14 @@ void TcpServer::await_response() {
     if (str.compare("HELLO") == 0) {
         cout << str << endl;
     } else if (str.compare("BYE") == 0) {
-        end_gracefully();
+        if (this->_end) {
+            // we ended this connection, this is a confirmation
+            cout << str << endl;
+            end();
+        } else {
+            // we received from server BYE first
+            end_gracefully();
+        }
         exit(EXIT_SUCCESS);
     } else {
         cout << "RESULT " << str << endl;
