@@ -11,7 +11,9 @@
 #include <iostream>
 #include <string>
 
-#define BUFSIZE 1024
+#include "server.hpp"
+
+// UDP specific definitions
 
 #define OPCODE_REQUEST 0
 #define OPCODE_RESPONSE 1
@@ -88,7 +90,7 @@ void UdpServer::await_response() {
         exit(EXIT_FAILURE);
     }
 
-    // copy paylload from the buffer
+    // copy payload from the buffer
 
     int payload_length = buf[2];
 

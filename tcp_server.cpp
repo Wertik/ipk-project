@@ -10,7 +10,7 @@
 #include <iostream>
 #include <string>
 
-#define BUFSIZE 1024
+#include "server.hpp"
 
 void TcpServer::begin(string host, int port) {
     // dns resolution
