@@ -54,7 +54,9 @@ If the socket sockfd is of type SOCK_DGRAM, then addr is the address to which da
 
 ## Testování
 
-Program byl testován na vlastní implementaci jednoduchého serveru, který odpovídá na matematické otázky vždy stejně špatně. Jeho chování by ale mělo být podobné reálnému serveru (snad).
+Program byl testován pomocí upravených "Stubs" poskytnutých jako reference k řešení projektu. Tohle testování není vůbec spolehlivé -- není ani vůči referenčnímu serveru, ale poskytne aspoň minimální možnost otestovat funkčnost klienta navázat spojení a posílat dotazy.
+
+Stubs byly upraveny tak, aby odpovídaly matematicky naprosto špatně. Pro TCP přidány odpovědi na `HELLO` & `BYE`. Pro UDP obdržení nemilé chybové hlášky.
 
 ### TCP
 
