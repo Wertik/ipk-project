@@ -14,7 +14,7 @@ class ServerConfig {
    private:
     int _port = -1;
     string _host = "localhost";
-    ServerMode _mode = UNKNOWN;
+    ServerMode _mode = ServerMode::TCP;
 
    public:
     ServerConfig() {}
