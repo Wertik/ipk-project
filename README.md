@@ -58,7 +58,11 @@ Program byl testován pomocí upravených "Stubs" poskytnutých jako reference k
 
 Stubs byly upraveny tak, aby odpovídaly matematicky naprosto špatně. Pro TCP přidány odpovědi na `HELLO` & `BYE`. Pro UDP obdržení nemilé chybové hlášky.
 
+Testovací server ani zdroje pro vstupy nejsou zahrnuty v repozitáři.
+
 ### TCP
+
+`cat commands_tcp | ./ipkcpc -m tcp -h localhost -p 2065`
 
 #### Korektní spuštění a odpovědi
 Vstup
@@ -93,6 +97,8 @@ BYE
 ```
 
 ### UDP
+
+`cat commands_udp | ./ipkcpc -m udp -h localhost -p 2065`
 
 #### Korektní spuštění a odpovědi
 Vstup
