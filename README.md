@@ -90,6 +90,28 @@ HELLO
 BYE
 ```
 
+### UDP
+
+#### Korektní spuštění a odpovědi
+Vstup
+```
+(+ 1 2)
+```
+Výstup
+```
+OK:42
+```
+
+#### Chyba ze strany serveru
+Vstup
+```
+(a b)
+```
+Výstup
+```
+ERR:FU
+```
+
 ## Funkčnost nad rámec zadání
 
 Implementace je rozšířena pouze o QoL maličkosti -- přidána help page s použitím programu a možnost použít i dlouhé verze přepínačů.
