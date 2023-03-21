@@ -68,13 +68,22 @@ int main(int argc, const char* argv[]) {
                 res = recv(comm_socket, buff, 1024, 0);
 
                 if (res <= 0) {
-                    std::cout << "pass\n";
                     break;
                 }
 
-                std::cout << "echo\n";
+                std::cout << "Recv: " << buff << std::endl;
 
-                send(comm_socket, buff, strlen(buff), 0);
+                if (strcmp(buff, "HELLO") == 0) {
+                    send(comm_socket, "HELLO", 6, 0);
+                }
+
+                if (strcmp(buff, "BYE") == 0) {
+                    send(comm_socket, "BYE", 4, 0);
+                }
+
+                send(comm_socket, "42", 3, 0);
+
+                /* send(comm_socket, buff, strlen(buff), 0); */
             }
         } else {
             printf(".");

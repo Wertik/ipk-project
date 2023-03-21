@@ -1,7 +1,7 @@
 CC=g++
 TARGET=ipkcpc
-HEADERS=arg_parser.hpp cli.hpp match_result.hpp option.hpp parse_result.hpp server_config.hpp server_mode.hpp
-OBJS=ipkcpc.o arg_parser.o cli.o option.o parse_result.o server_config.o server_mode.o
+HEADERS=arg_parser.hpp cli.hpp match_result.hpp option.hpp parse_result.hpp server_config.hpp server_mode.hpp tcp_server.hpp server.hpp
+OBJS=ipkcpc.o arg_parser.o cli.o option.o parse_result.o server_config.o server_mode.o tcp_server.o
 CFLAGS=-std=c++2a
 
 DEF_PORT=2065
