@@ -61,7 +61,7 @@ ServerConfig process_cli(int argc, const char *argv[]) {
             } catch (invalid_argument const &ex) {
                 cerr << "ERROR: Port has to be a number. " << arg.get_value() << " is not a number." << endl;
                 exit(EXIT_FAILURE);
-            }
+            } 
         }
 
         // nothing to validate?
@@ -74,8 +74,6 @@ ServerConfig process_cli(int argc, const char *argv[]) {
         cerr << "ERROR: Server configuration incomplete." << endl;
         exit(EXIT_FAILURE);
     }
-
-    cerr << "[VERBOSE]: Running with config: " << config << endl;
 
     return config;
 }

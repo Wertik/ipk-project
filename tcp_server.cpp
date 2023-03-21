@@ -13,6 +13,9 @@
 #include "server.hpp"
 
 void TcpServer::begin(string host, int port) {
+    // Code taken from https://git.fit.vutbr.cz/NESFIT/IPK-Projekty/src/branch/master/Stubs/cpp/DemoUdp/client.c
+    // And slightly modified.
+
     // dns resolution
     struct hostent *server = gethostbyname(host.c_str());
     if (server == NULL) {
@@ -28,21 +31,15 @@ void TcpServer::begin(string host, int port) {
     bcopy((char *)server->h_addr, (char *)&server_address.sin_addr.s_addr, server->h_length);
     server_address.sin_port = htons(port);
 
-    /* tiskne informace o vzdalenem soketu */
-    // todo
-    printf("[VERBOSE]: Server TCP socket: %s:%d \n", inet_ntoa(server_address.sin_addr), ntohs(server_address.sin_port));
-
     /* Vytvoreni soketu */
     _socketfd = socket(AF_INET, SOCK_STREAM, 0);
     if (_socketfd <= 0) {
-        // todo
-        perror("ERROR: socket");
+        cerr << "ERROR: Failed to open socket endpoint." << endl;
         exit(EXIT_FAILURE);
     }
 
     if (connect(_socketfd, (const struct sockaddr *)&server_address, sizeof(server_address)) != 0) {
-        // todo
-        perror("ERROR: connect");
+        cerr << "ERROR: Failed to connect socket." << endl;
         exit(EXIT_FAILURE);
     }
 }
@@ -51,8 +48,7 @@ void TcpServer::send_payload(string payload) {
     ssize_t sent = send(_socketfd, payload.c_str(), payload.length() + 1, 0);
 
     if (sent < 0) {
-        // todo
-        perror("ERROR in sendto");
+        cerr << "ERROR: Failed to send payload to server." << endl;
         end_gracefully();
         exit(EXIT_SUCCESS);
     }
@@ -66,8 +62,7 @@ void TcpServer::await_response() {
     ssize_t received = recv(_socketfd, buf, BUFSIZE, 0);
 
     if (received < 0) {
-        // todo
-        perror("ERROR in recvfrom");
+        cerr << "ERROR: Failed to receive payload from server." << endl;
         end_gracefully();
         exit(EXIT_SUCCESS);
     }

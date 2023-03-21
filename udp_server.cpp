@@ -22,6 +22,9 @@
 #define STATUS_ERR 1
 
 void UdpServer::begin(string host, int port) {
+    // Code taken from https://git.fit.vutbr.cz/NESFIT/IPK-Projekty/src/branch/master/Stubs/cpp/DemoUdp/client.c
+    // And slightly modified.
+
     // dns resolution
     struct hostent *server = gethostbyname(host.c_str());
     if (server == NULL) {
@@ -37,21 +40,17 @@ void UdpServer::begin(string host, int port) {
     bcopy((char *)server->h_addr, (char *)&server_address.sin_addr.s_addr, server->h_length);
     server_address.sin_port = htons(port);
 
-    /* tiskne informace o vzdalenem soketu */
-    // todo
-    printf("[VERBOSE]: Server UDP socket: %s:%d \n", inet_ntoa(server_address.sin_addr), ntohs(server_address.sin_port));
-
-    /* Vytvoreni soketu */
+    // create socket endpoint
     _socketfd = socket(AF_INET, SOCK_DGRAM, 0);
     if (_socketfd <= 0) {
-        // todo
-        perror("ERROR: socket");
+        cerr << "ERROR: Failed to open socket endpoint." << endl;
         exit(EXIT_FAILURE);
     }
 
+    // connect
+    // as-per man docs, connect should only set the default server address for UDP communication
     if (connect(_socketfd, (const struct sockaddr *)&server_address, sizeof(server_address)) != 0) {
-        // todo
-        perror("ERROR: connect");
+        cerr << "ERROR: Failed to connect socket." << endl;
         exit(EXIT_FAILURE);
     }
 }
@@ -60,8 +59,7 @@ void UdpServer::send_payload(string payload) {
     ssize_t sent = send(_socketfd, payload.c_str(), payload.length() + 1, 0);
 
     if (sent < 0) {
-        // todo
-        perror("ERROR in sendto");
+        cerr << "ERROR: Failed to send payload to server." << endl;
         end_gracefully();
         exit(EXIT_SUCCESS);
     }
@@ -75,8 +73,7 @@ void UdpServer::await_response() {
     ssize_t received = recv(_socketfd, buf, BUFSIZE, MSG_DONTWAIT);
 
     if (received < 0) {
-        // todo
-        perror("ERROR in recvfrom");
+        cerr << "ERROR: Failed to receive payload from server." << endl;
         end_gracefully();
         exit(EXIT_SUCCESS);
     }

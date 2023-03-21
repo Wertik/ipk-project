@@ -26,7 +26,7 @@ Konkrétní využití pro potřeby klienta je separováno do souborů `cli.hpp/c
 
 Serverové třídy rozšiřují abstraktní třídu `Server`, která slouží jako rozhraní a definuje metody nutné pro vytvoření socketu a připojení, posílání zpráv, vyčkávání na odpověď a ukončení komunikace. Pro ukončení existují dvě možné funkce - `void end_gracefully()` & `void end()`. První z nich přes ukončením spojení provede nutnou komunikaci se serverem (to se děje pouze v případě TCP serveru), druhá provede okamžité uzavření socketu.
 
-Pro zpracování signálu `C-c` (nebo `^C`, nebo `SIGINT`) je použita [sigaction](https://man7.org/linux/man-pages/man2/sigaction.2.html). Komunikace se ukončí před odesláním dalšího požadavku serveru*.
+Pro zpracování signálu `C-c` (nebo `^C`, nebo `SIGINT`) je použita [sigaction](https://man7.org/linux/man-pages/man2/sigaction.2.html). Komunikace se ukončí před odesláním dalšího požadavku serveru*. Ukončením se rozumí odeslání příkazu `BYE` serveru, klient už ovšem na odpověď nečeká a uzavře spojení.
 
 \* _V případě, že požadavek byl právě odeslán, klient čeká na odpověď serveru, až poté ukončí spojení._
 
@@ -50,7 +50,53 @@ If the socket sockfd is of type SOCK_DGRAM, then addr is the address to which da
 ```
 [man7.org](https://man7.org/linux/man-pages/man2/connect.2.html)
 
+Čekání na odpověď serveru je v obou módech blokující a nemá timeout. V případě, že server neodpoví, klient čeká do nekonečna.
+
+## Testování
+
+Program byl testován na vlastní implementaci jednoduchého serveru, který odpovídá na matematické otázky vždy stejně špatně. Jeho chování by ale mělo být podobné reálnému serveru (snad).
+
+### TCP
+
+#### Korektní spuštění a odpovědi
+Vstup
+```
+HELLO
+SOLVE (+ 1 2)
+SOLVE (+ 10 23)
+BYE
+```
+Výstup
+```
+HELLO
+RESULT 42
+RESULT 42
+BYE
+```
+
+#### Ukončení pomocí ^C
+Vstup
+```
+HELLO
+~~ ^C ~~
+```
+Výstup
+```
+HELLO
+```
+Server
+```
+HELLO
+BYE
+```
+
 ## Funkčnost nad rámec zadání
 
 Implementace je rozšířena pouze o QoL maličkosti -- přidána help page s použitím programu a možnost použít i dlouhé verze přepínačů.
 (Např.: `./ipkcpc --mode=UDP --host=localhost --port=2065`)
+
+## Zdroje
+
+https://man7.org/linux/man-pages/
+https://www.ibm.com/docs/en/zos/2.4.0?topic=functions-sigaction-examine-change-signal-action
+https://choosealicense.com/licenses/agpl-3.0/
