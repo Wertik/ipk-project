@@ -56,7 +56,17 @@ void UdpServer::begin(string host, int port) {
 }
 
 void UdpServer::send_payload(string payload) {
-    ssize_t sent = send(_socketfd, payload.c_str(), payload.length() + 1, 0);
+    int len = payload.length() + 1 + 2;  // + null termination + 2 bytes of header
+
+    char buf[len];
+    buf[0] = OPCODE_REQUEST;
+    buf[1] = payload.length() + 1;  // + null termination
+
+    const char *payload_raw = payload.c_str();
+    // copy into buffer
+    std::copy(&payload_raw[0], &payload_raw[payload.length()], &buf[2]);
+
+    ssize_t sent = send(_socketfd, buf, len, 0);
 
     if (sent < 0) {
         cerr << "ERROR: Failed to send payload to server." << endl;
