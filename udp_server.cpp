@@ -70,7 +70,7 @@ void UdpServer::await_response() {
     char buf[BUFSIZE];
 
     bzero(buf, BUFSIZE);
-    ssize_t received = recv(_socketfd, buf, BUFSIZE, MSG_DONTWAIT);
+    ssize_t received = recv(_socketfd, buf, BUFSIZE, 0);
 
     if (received < 0) {
         cerr << "ERROR: Failed to receive payload from server." << endl;
@@ -92,7 +92,7 @@ void UdpServer::await_response() {
     int payload_length = buf[2];
 
     char payload[payload_length];
-    std::copy(&buf[3], &buf[BUFSIZE - 1], payload);
+    std::copy(&buf[3], &buf[3 + payload_length], payload);
 
     // check status code and print based on that (ERR / OK)
     // STATUS_OK
