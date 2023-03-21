@@ -29,4 +29,4 @@ server: server.o
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
-	rm -rf $(TARGET) server server.o $(OBJS).o
+	rm -rf $(TARGET) server server.o $(OBJS)
