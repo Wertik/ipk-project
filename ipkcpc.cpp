@@ -46,7 +46,6 @@ int main(int argc, const char *argv[]) {
 
     string in;
     while (getline(cin, in)) {
-        sleep(2);
         if (sig_exit == 1) {
             // graceful enough?
             server->end_gracefully();
