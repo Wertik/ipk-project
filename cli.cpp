@@ -10,10 +10,10 @@
 using namespace std;
 
 ServerConfig process_cli(int argc, const char *argv[]) {
-    Option host("host", "h", "Sets the host of the calc server.", true);
-    Option port("port", "p", "Sets the port of the calc server.", true);
-    Option mode("mode", "m", "Sets the mode of communication. Supported modes: UDP, TCP.", true);
-    Option help("help", "hwastaken", "Prints the help information.", false);
+    Option host("host", "h", "Set the host of the calculator server.", true);
+    Option port("port", "p", "Set the port of the calculator server.", true);
+    Option mode("mode", "m", "Set the mode of communication. Supported modes: UDP, TCP.", true);
+    Option help("help", "hwastaken", "Print this help page, exit.", false);
 
     vector<Option *> options({
         &help,
