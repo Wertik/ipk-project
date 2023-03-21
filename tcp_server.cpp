@@ -72,7 +72,8 @@ void TcpServer::await_response() {
     if (str.compare("HELLO") == 0) {
         cout << str << endl;
     } else if (str.compare("BYE") == 0) {
-        cout << str << endl;
+        end_gracefully();
+        exit(EXIT_SUCCESS);
     } else {
         cout << "RESULT " << str << endl;
     }
