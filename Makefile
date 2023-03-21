@@ -18,15 +18,8 @@ $(TARGET): $(OBJS)
 cmds: $(TARGET)
 	cat commands | ./$(TARGET) $(DEF_CLIENT_ARGS)
 
-# run echo server
-rs: server
-	./server $(DEF_PORT)
-
-# Simple echo server coppied from stubs
-server: server.o
-
 %.o: %.cpp $(HEADERS)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
-	rm -rf $(TARGET) server server.o $(OBJS)
+	rm -rf $(TARGET) $(OBJS)
