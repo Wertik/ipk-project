@@ -60,7 +60,7 @@ void TcpServer::send_payload(string payload) {
 
 string TcpServer::await_response() {
     char buf[BUFSIZE];
-    
+
     bzero(buf, BUFSIZE);
     ssize_t received = recv(_socketfd, buf, BUFSIZE, 0);
 
