@@ -96,6 +96,20 @@ HELLO
 BYE
 ```
 
+#### Server nečekaně odpověděl BYE na SOLVE
+
+Vstup
+```
+HELLO
+SOLVE (+ 1 2)
+BYE
+```
+Výstup
+```
+HELLO
+BYE
+```
+
 ### UDP
 
 `cat commands_udp | ./ipkcpc -m udp -h localhost -p 2065`
