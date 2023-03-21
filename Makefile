@@ -11,7 +11,7 @@ DEF_CLIENT_ARGS=-m tcp -h localhost -p $(DEF_PORT)
 
 .PHONY: $(TARGET)
 
-all: $(TARGET) server
+all: $(TARGET)
 
 $(TARGET): $(OBJS)
 	$(CC) -o $(TARGET) $(OBJS)
