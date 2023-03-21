@@ -1,9 +1,12 @@
 #pragma once
 
-#include <sstream>
+#include <iostream>
 #include <string>
 
+#include "server.hpp"
 #include "server_mode.hpp"
+#include "tcp_server.hpp"
+#include "udp_server.hpp"
 
 using namespace std;
 
@@ -26,6 +29,8 @@ class ServerConfig {
     void set_host(string host);
 
     bool is_complete();
+
+    Server *create_server();
 
     friend ostream &operator<<(ostream &out, const ServerConfig &config);
 };

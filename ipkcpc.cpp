@@ -7,6 +7,7 @@
 #include "cli.hpp"
 #include "server_config.hpp"
 #include "tcp_server.hpp"
+#include "udp_server.hpp"
 
 using namespace std;
 
@@ -38,10 +39,8 @@ int main(int argc, const char *argv[]) {
 
     // Connect to the server
 
-    // todo: mode, create different servers
-
-    TcpServer server;
-    server.begin(config.get_host(), config.get_port());
+    Server *server = config.create_server();
+    server->begin(config.get_host(), config.get_port());
 
     // Read from stdin, send query, wait for response
 
@@ -49,18 +48,18 @@ int main(int argc, const char *argv[]) {
     while (getline(cin, in)) {
         if (sig_exit == 1) {
             // graceful enough?
-            server.force_bye();
+            server->end_gracefully();
             break;
         }
 
-        server.send_payload(in);
+        server->send_payload(in);
 
         // blocking
-        server.await_response();
+        server->await_response();
     }
 
     // End connection
 
-    server.end();
+    server->end();
     return 0;
 }

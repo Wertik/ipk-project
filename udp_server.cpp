@@ -1,4 +1,4 @@
-#include "tcp_server.hpp"
+#include "udp_server.hpp"
 
 #include <arpa/inet.h>
 #include <netdb.h>
@@ -7,12 +7,19 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 
 #define BUFSIZE 1024
 
-void TcpServer::begin(string host, int port) {
+#define OPCODE_REQUEST 0
+#define OPCODE_RESPONSE 1
+
+#define STATUS_OK 0
+#define STATUS_ERR 1
+
+void UdpServer::begin(string host, int port) {
     // dns resolution
     struct hostent *server = gethostbyname(host.c_str());
     if (server == NULL) {
@@ -30,10 +37,10 @@ void TcpServer::begin(string host, int port) {
 
     /* tiskne informace o vzdalenem soketu */
     // todo
-    printf("[VERBOSE]: Server TCP socket: %s:%d \n", inet_ntoa(server_address.sin_addr), ntohs(server_address.sin_port));
+    printf("[VERBOSE]: Server UDP socket: %s:%d \n", inet_ntoa(server_address.sin_addr), ntohs(server_address.sin_port));
 
     /* Vytvoreni soketu */
-    _socketfd = socket(AF_INET, SOCK_STREAM, 0);
+    _socketfd = socket(AF_INET, SOCK_DGRAM, 0);
     if (_socketfd <= 0) {
         // todo
         perror("ERROR: socket");
@@ -47,7 +54,7 @@ void TcpServer::begin(string host, int port) {
     }
 }
 
-void TcpServer::send_payload(string payload) {
+void UdpServer::send_payload(string payload) {
     ssize_t sent = send(_socketfd, payload.c_str(), payload.length() + 1, 0);
 
     if (sent < 0) {
@@ -59,11 +66,11 @@ void TcpServer::send_payload(string payload) {
 }
 
 // blocking OP
-void TcpServer::await_response() {
+void UdpServer::await_response() {
     char buf[BUFSIZE];
 
     bzero(buf, BUFSIZE);
-    ssize_t received = recv(_socketfd, buf, BUFSIZE, 0);
+    ssize_t received = recv(_socketfd, buf, BUFSIZE, MSG_DONTWAIT);
 
     if (received < 0) {
         // todo
@@ -72,23 +79,37 @@ void TcpServer::await_response() {
         exit(EXIT_SUCCESS);
     }
 
-    string str(buf);
+    // check opcode (first byte) is response
+    // OPCODE_REQUEST
+    // OPCODE_RESPONSE
 
-    if (str.compare("HELLO") == 0) {
-        cout << str << endl;
-    } else if (str.compare("BYE") == 0) {
-        cout << str << endl;
-    } else {
-        cout << "RESULT " << str << endl;
+    if (buf[0] != OPCODE_RESPONSE) {
+        cerr << "ERROR: Expected a response from server. Wrong opcode." << endl;
+        exit(EXIT_FAILURE);
     }
+
+    // copy paylload from the buffer
+
+    int payload_length = buf[2];
+
+    char payload[payload_length];
+    std::copy(&buf[3], &buf[BUFSIZE - 1], payload);
+
+    // check status code and print based on that (ERR / OK)
+    // STATUS_OK
+    // STATUS_ERR
+    if (buf[1] != STATUS_OK) {
+        cout << "ERR:" << payload << endl;
+        return;
+    }
+
+    cout << "OK:" << payload << endl;
 }
 
-void TcpServer::end_gracefully() {
-    send_payload("BYE");
-    // don't wait for response
+void UdpServer::end_gracefully() {
     end();
 }
 
-void TcpServer::end() {
+void UdpServer::end() {
     close(_socketfd);
 }

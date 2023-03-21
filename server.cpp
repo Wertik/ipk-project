@@ -75,12 +75,15 @@ int main(int argc, const char* argv[]) {
 
                 if (strcmp(buff, "HELLO") == 0) {
                     send(comm_socket, "HELLO", 6, 0);
+                    continue;
                 }
 
                 if (strcmp(buff, "BYE") == 0) {
                     send(comm_socket, "BYE", 4, 0);
+                    continue;
                 }
 
+                /* sleep(5); */
                 send(comm_socket, "42", 3, 0);
 
                 /* send(comm_socket, buff, strlen(buff), 0); */

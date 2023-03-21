@@ -1,7 +1,5 @@
 #include "server_config.hpp"
 
-#include "server_mode.hpp"
-
 void ServerConfig::ServerConfig::set_port(int port) {
     this->_port = port;
 }
@@ -29,6 +27,24 @@ ServerMode ServerConfig::get_mode() {
 bool ServerConfig::is_complete() {
     // todo: enforce with a constructor somehow? idk
     return this->_mode != UNKNOWN && !this->_host.empty() && this->_port != -1;
+}
+
+// factory method to create servers
+// included here just coz convenience
+Server *ServerConfig::create_server() {
+    switch (_mode) {
+        case TCP: {
+            TcpServer *server = new TcpServer();
+            return server;
+        }
+        case UDP: {
+            UdpServer *server = new UdpServer();
+            return server;
+        }
+        default:
+            cerr << "ERROR: Server mode not supported." << endl;
+            exit(EXIT_FAILURE);
+    }
 }
 
 ostream &operator<<(ostream &out, const ServerConfig &config) {
