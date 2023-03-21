@@ -26,7 +26,7 @@ cmds: $(TARGET)
 # Pack for submission
 pack:
 	rm -rf xotrad00.zip
-	zip $(LOGIN).zip *.cpp *.hpp README.md LICENSE .gitignore
+	zip $(LOGIN).zip *.cpp *.hpp README.md LICENSE CHANGELOG.md .gitignore
 
 clean:
 	rm -rf xotrad00.zip
