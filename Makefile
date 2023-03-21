@@ -4,6 +4,8 @@ HEADERS=arg_parser.hpp cli.hpp match_result.hpp option.hpp parse_result.hpp serv
 OBJS=ipkcpc.o arg_parser.o cli.o option.o parse_result.o server_config.o server_mode.o tcp_server.o udp_server.o
 CFLAGS=-std=c++2a
 
+LOGIN=xotrad00
+
 DEF_PORT=2065
 DEF_CLIENT_ARGS=-m tcp -h localhost -p $(DEF_PORT)
 
@@ -21,5 +23,11 @@ cmds: $(TARGET)
 %.o: %.cpp $(HEADERS)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
+# Pack for submission
+pack:
+	rm -rf xotrad00.zip
+	zip $(LOGIN).zip *.cpp *.hpp README.md LICENSE .gitignore
+
 clean:
+	rm -rf xotrad00.zip
 	rm -rf $(TARGET) $(OBJS)
