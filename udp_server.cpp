@@ -75,7 +75,14 @@ void UdpServer::await_response() {
     if (received < 0) {
         cerr << "ERROR: Failed to receive payload from server." << endl;
         end_gracefully();
-        exit(EXIT_SUCCESS);
+        exit(EXIT_FAILURE);
+    }
+
+    // missing format bytes
+    if (received < 4) {
+        cerr << "ERROR: Bad response format." << endl;
+        end_gracefully();
+        exit(EXIT_FAILURE);
     }
 
     // check opcode (first byte) is response
